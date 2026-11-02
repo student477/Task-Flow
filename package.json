@@ -1,0 +1,23 @@
+{
+  "name": "taskflow-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TaskFlow — Modern MERN Stack Project Management Application",
+  "scripts": {
+    "dev:server": "cd server && node server.js",
+    "dev:client": "cd client && npm run dev",
+    "build:client": "cd client && npm run build",
+    "test:server": "cd server && node test_backend.js",
+    "test:integration": "cd client && node verify_frontend_integration.js"
+  },
+  "keywords": [
+    "mern",
+    "react",
+    "express",
+    "mongodb",
+    "project-management",
+    "kanban"
+  ],
+  "author": "TaskFlow Engineering Team",
+  "license": "MIT"
+}
