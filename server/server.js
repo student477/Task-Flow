@@ -24,11 +24,26 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 
+// Root Status Endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    name: 'TaskFlow API Engine',
+    status: 'online',
+    version: '1.0.0',
+    healthCheck: '/api/v1/health'
+  });
+});
+
 // Health Check Endpoint
 app.get('/api/v1/health', (req, res) => {
+  const mongoose = require('mongoose');
+  const dbState = mongoose.connection.readyState;
+  const states = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
   res.status(200).json({
     success: true,
     message: 'TaskFlow API Engine is operational.',
+    database: states[dbState] || 'unknown',
     timestamp: new Date().toISOString()
   });
 });
