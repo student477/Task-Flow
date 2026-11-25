@@ -1,5 +1,10 @@
 # TaskFlow — Modern MERN Stack Project Management SaaS
 
+[![Live Demo](https://img.shields.io/badge/Demo-Live_Website-indigo.svg?style=for-the-badge&logo=vercel)](https://task-flow-wheat-chi.vercel.app)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-student477%2FTask--Flow-181717.svg?style=for-the-badge&logo=github)](https://github.com/student477/Task-Flow)
+
+> 🚀 **Live Production URL:** [https://task-flow-wheat-chi.vercel.app](https://task-flow-wheat-chi.vercel.app)
+
 [![Node.js Version](https://img.shields.io/badge/Node.js-v24.x-68a063.svg?logo=node.js)](https://nodejs.org/)
 [![React Version](https://img.shields.io/badge/React-18.x-61dafb.svg?logo=react)](https://react.dev/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-v8.x-47A248.svg?logo=mongodb)](https://www.mongodb.com/)
