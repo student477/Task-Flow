@@ -35,8 +35,8 @@ app.get('/', (req, res) => {
   });
 });
 
-// Health Check Endpoint
-app.get('/api/v1/health', (req, res) => {
+// Health Check Endpoints (both /api/v1/health and /health)
+const handleHealthCheck = (req, res) => {
   const mongoose = require('mongoose');
   const dbState = mongoose.connection.readyState;
   const states = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
@@ -46,14 +46,44 @@ app.get('/api/v1/health', (req, res) => {
     database: states[dbState] || 'unknown',
     timestamp: new Date().toISOString()
   });
-});
+};
+app.get('/api/v1/health', handleHealthCheck);
+app.get('/health', handleHealthCheck);
 
-// Mount API Routes
-app.use('/api/v1/auth', require('./routes/authRoutes'));
-app.use('/api/v1/projects', require('./routes/projectRoutes'));
-app.use('/api/v1/tasks', require('./routes/taskRoutes'));
-app.use('/api/v1/comments', require('./routes/commentRoutes'));
-app.use('/api/v1/dashboard', require('./routes/dashboardRoutes'));
+// Database availability middleware for data endpoints
+const checkDbConnection = (req, res, next) => {
+  const mongoose = require('mongoose');
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({
+      success: false,
+      message: 'Database is currently disconnected. Please ensure MONGODB_URI is configured in Render environment variables and IP 0.0.0.0/0 is whitelisted in MongoDB Atlas.'
+    });
+  }
+  next();
+};
+
+// Route Handlers
+const authRoutes = require('./routes/authRoutes');
+const projectRoutes = require('./routes/projectRoutes');
+const taskRoutes = require('./routes/taskRoutes');
+const commentRoutes = require('./routes/commentRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
+
+// Mount routes with /api/v1 and fallback root paths to eliminate any possible URL mismatch
+app.use('/api/v1/auth', checkDbConnection, authRoutes);
+app.use('/auth', checkDbConnection, authRoutes);
+
+app.use('/api/v1/projects', checkDbConnection, projectRoutes);
+app.use('/projects', checkDbConnection, projectRoutes);
+
+app.use('/api/v1/tasks', checkDbConnection, taskRoutes);
+app.use('/tasks', checkDbConnection, taskRoutes);
+
+app.use('/api/v1/comments', checkDbConnection, commentRoutes);
+app.use('/comments', checkDbConnection, commentRoutes);
+
+app.use('/api/v1/dashboard', checkDbConnection, dashboardRoutes);
+app.use('/dashboard', checkDbConnection, dashboardRoutes);
 
 // 404 Handler for undefined routes
 app.use('*', (req, res) => {
